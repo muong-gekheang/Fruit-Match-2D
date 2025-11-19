@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Matching-Fruit-Game.sln"
+    "dotnet.defaultSolution": "Fruit-Match-2D.sln"
 }
