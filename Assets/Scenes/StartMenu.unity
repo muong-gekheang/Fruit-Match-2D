@@ -311,7 +311,7 @@ GameObject:
   m_Component:
   - component: {fileID: 831614623}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -644,7 +644,7 @@ GameObject:
   - component: {fileID: 1710944651}
   - component: {fileID: 1710944650}
   m_Layer: 5
-  m_Name: Cover
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -667,7 +667,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -0.0024414062, y: 0.010009766}
-  m_SizeDelta: {x: 1170, y: 2532}
+  m_SizeDelta: {x: 1300, y: 2762}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1710944650
 MonoBehaviour:
@@ -854,7 +854,7 @@ GameObject:
   - component: {fileID: 1831203708}
   - component: {fileID: 1831203709}
   m_Layer: 0
-  m_Name: GameManagerForMenu
+  m_Name: StartMenuManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -887,7 +887,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e1f0ab808f0a4bebb610977aabbd341, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: SampleScene
 --- !u!1 &1869972651
 GameObject:
   m_ObjectHideFlags: 0
@@ -972,8 +971,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1831203709}
-        m_TargetAssemblyTypeName: StartMenuSceneSwticher, Assembly-CSharp
-        m_MethodName: SwitchScene
+        m_TargetAssemblyTypeName: StartMenuGameManager, Assembly-CSharp
+        m_MethodName: GoToPlayScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

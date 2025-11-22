@@ -1,15 +1,30 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    public string sceneName;
+
+    private float elapsedTime = 0f; // time in seconds
+    private bool timerRunning = false;
+    public TMP_Text timerText;
+
+    private int matchedCount = 0;
+
     public static GameManager instance;
 
     public GameObject cardPrefab;
     public Transform gridParent; // assign GridPanel
     public Button playButton;
+    public Button pauseButton;
+    public Button restartButton;
+
+    private bool isPaused = false;
+
     public Sprite[] fruitSprites; // 4 unique sprites for 8 cards
 
     private List<Card> allCards = new List<Card>();
@@ -19,10 +34,32 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
         playButton.onClick.AddListener(StartGame);
+        pauseButton.onClick.AddListener(TogglePause);
+        restartButton.onClick.AddListener(RestartGame);
+
+        pauseButton.gameObject.SetActive(false);
+        restartButton.gameObject.SetActive(false);
     }
+
+    void Update()
+    {
+        if (timerRunning && !isPaused)
+        {
+            elapsedTime += Time.deltaTime;
+            UpdateTimerUI();
+        }
+    }
+
 
     public void StartGame()
     {
+        matchedCount = 0;
+
+        //on game start, show only pause and restart buttons
+        playButton.gameObject.SetActive(false);
+        pauseButton.gameObject.SetActive(true);
+        restartButton.gameObject.SetActive(true);
+
         foreach (Transform child in gridParent)
             Destroy(child.gameObject);
 
@@ -53,17 +90,53 @@ public class GameManager : MonoBehaviour
             int id = ids[i];
 
             card.cardID = id;
-            card.fruitImage.sprite = fruitSprites[id]; // sprite matches ID
+            card.frontImage.sprite = fruitSprites[id]; // sprite matches ID
             card.ShowBack();
 
             obj.GetComponent<Button>().onClick.AddListener(() => card.OnCardClick());
             allCards.Add(card);
         }
+
+        // make sure game runs if coming from paused
+        Time.timeScale = 1f;
+        elapsedTime = 0f;
+        timerRunning = true;
+        UpdateTimerUI();
+
+    }
+
+    public void TogglePause()
+    {
+        if (!isPaused)
+        {
+            Time.timeScale = 0f; // freeze
+            isPaused = true;
+        }
+        else
+        {
+            Time.timeScale = 1f; // unfreeze
+            isPaused = false;
+
+        }
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1f; // ensure normal speed
+        isPaused = false;
+
+        StartGame();
+    }
+
+    public void Exit()
+    {
+        SceneManager.LoadScene("StartMenu");
     }
 
 
     public void CardClicked(Card card)
     {
+        if (isPaused) return; // if game is paused, cards not flipped 
         if (flippedCards.Contains(card) || flippedCards.Count >= 2)
             return;
 
@@ -82,10 +155,11 @@ public class GameManager : MonoBehaviour
         {
             foreach (Card c in flippedCards)
             {
-                c.fruitImage.gameObject.SetActive(false); // hide front
+                c.frontImage.gameObject.SetActive(false); // hide front
                 c.backImage.gameObject.SetActive(false);  // hide back
                 c.GetComponent<Button>().interactable = false;
             }
+            matchedCount += 2;
         }
         else
         {
@@ -93,5 +167,21 @@ public class GameManager : MonoBehaviour
                 c.ShowBack();
         }
         flippedCards.Clear();
+
+        if (matchedCount == allCards.Count)
+        {
+            timerRunning = false;
+            ResultManager.finalTime = elapsedTime;
+            SceneManager.LoadScene("ResultScene");
+        }
     }
+
+    void UpdateTimerUI()
+    {
+        int minutes = Mathf.FloorToInt(elapsedTime / 60f);
+        int seconds = Mathf.FloorToInt(elapsedTime % 60f);
+
+        timerText.text = $"{minutes:00}:{seconds:00}";
+    }
+
 }

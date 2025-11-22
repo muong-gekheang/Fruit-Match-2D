@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour
 {
-    public Image fruitImage; // Front
+    public Image frontImage; // Front
     public Image backImage;  // Back
     [HideInInspector] public int cardID; // used for matching
 
@@ -12,14 +12,14 @@ public class Card : MonoBehaviour
 
     public void ShowFront()
     {
-        fruitImage.gameObject.SetActive(true);
+        frontImage.gameObject.SetActive(true);
         backImage.gameObject.SetActive(false);
         isFlipped = true;
     }
 
     public void ShowBack()
     {
-        fruitImage.gameObject.SetActive(false);
+        frontImage.gameObject.SetActive(false);
         backImage.gameObject.SetActive(true);
         isFlipped = false;
     }
